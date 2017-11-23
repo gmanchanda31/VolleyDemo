@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -49,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mContext = this;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
 
         MenuItem item = menu.findItem(R.id.action_search);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
@@ -66,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(mContext,"testingServerSuccessResponse: "+ response, Toast.LENGTH_SHORT).show();
                                 try{
                                     Log.v("MainActivity", "testingServerErrorResponse: "+ response.getString("results"));
                                     Log.v("MainActivity", "testingServerErrorResponse: "+ response);

@@ -43,14 +43,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     class FeedViewHolder extends RecyclerView.ViewHolder{
         TextView heading;
         TextView shortDescription;
-        ImageView Desciptionimage;
         public FeedViewHolder(View itemView) {
 
             super(itemView);
             heading = itemView.findViewById(R.id.heading);
             shortDescription = itemView.findViewById(R.id.shortDescription);
 
-            Desciptionimage = itemView.findViewById(R.id.description_image);
 
 
         }
@@ -58,7 +56,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             heading.setText(Jheading);
 
             shortDescription.setText(Jdescription);
-            Desciptionimage.setImageResource(R.drawable.ic_action_action_search);
         }
     }
 }
