@@ -5,13 +5,18 @@ import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -25,10 +30,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,17 +44,21 @@ public class MainActivity extends AppCompatActivity {
     private static final String USER_DETAILS_ENDPOINT = "http://brightacademy.in/users/23/";
     private Context mContext;
     MaterialSearchView searchView;
+    RecyclerView mRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mContext = this;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
 
         MenuItem item = menu.findItem(R.id.action_search);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
@@ -58,9 +70,32 @@ public class MainActivity extends AppCompatActivity {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(mContext,"testingServerSuccessResponse: "+ response, Toast.LENGTH_SHORT).show();
-                                Log.v("MainActivity", "testingServerErrorResponse: "+ response);
-                            }
+                                try{
+                                    Log.v("MainActivity", "testingServerErrorResponse: "+ response.getString("results"));
+                                    Log.v("MainActivity", "testingServerErrorResponse: "+ response);
+                                    JSONObject resultJSONObject = response.getJSONObject("results");
+                                    JSONArray currentAffairJOSNArray = resultJSONObject.getJSONArray("Tuesday Aug 01, 2017");
+                                    ArrayList<ModelFields> mModelList = new ArrayList();
+                                    ModelFields mModelObject;
+                                    for(int i = 0; i < currentAffairJOSNArray.length(); i++)
+                                    {
+                                        JSONObject object = currentAffairJOSNArray.getJSONObject(i);
+                                        JSONObject feildsObject = object.getJSONObject("fields");
+                                        mModelObject = new ModelFields(feildsObject);
+                                        mModelList.add(mModelObject);
+                                        Log.v("MainActivity", "testingServerErrorResponse: "+ mModelList.get(i).getDescription());
+                                    }
+
+                                    FeedAdapter mFeedAdapter = new FeedAdapter(mModelList);
+                                    mRecyclerView = findViewById(R.id.feedRecyclerView);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
+                                    mRecyclerView.setLayoutManager(layoutManager);
+                                    mRecyclerView.setAdapter(mFeedAdapter);
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+
+                                }
+                               }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -81,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 };
                 RequestQueue requestQueue = Volley.newRequestQueue(mContext);
                 requestQueue.add(jsonObjectRequest);
+
 
                 return false;
             }
@@ -122,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+/*
     public void changeNumber(View view) {
         EditText NumberChangeEditText = (EditText) findViewById(R.id.numberchangeditText);
         HashMap<String, String > contactDetails = new HashMap();
@@ -167,4 +203,5 @@ public class MainActivity extends AppCompatActivity {
         }else
             Toast.makeText(mContext, "The number entered is invalid", Toast.LENGTH_SHORT).show();
     }
+    */
 }
