@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String USER_DETAILS_ENDPOINT = "http://brightacademy.in/users/23/";
     private Context mContext;
     MaterialSearchView searchView;
+    RecyclerView mRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +83,11 @@ public class MainActivity extends AppCompatActivity {
                                         Log.v("MainActivity", "testingServerErrorResponse: "+ mModelList.get(i).getDescription());
                                     }
 
-
-
+                                    FeedAdapter mFeedAdapter = new FeedAdapter(mModelList);
+                                    mRecyclerView = findViewById(R.id.feedRecyclerView);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
+                                    mRecyclerView.setLayoutManager(layoutManager);
+                                    mRecyclerView.setAdapter(mFeedAdapter);
                                 }catch (JSONException e){
                                     e.printStackTrace();
 
@@ -147,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+/*
     public void changeNumber(View view) {
         EditText NumberChangeEditText = (EditText) findViewById(R.id.numberchangeditText);
         HashMap<String, String > contactDetails = new HashMap();
@@ -192,4 +200,5 @@ public class MainActivity extends AppCompatActivity {
         }else
             Toast.makeText(mContext, "The number entered is invalid", Toast.LENGTH_SHORT).show();
     }
+    */
 }

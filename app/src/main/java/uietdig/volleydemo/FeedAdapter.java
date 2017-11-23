@@ -6,6 +6,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -42,17 +43,22 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     class FeedViewHolder extends RecyclerView.ViewHolder{
         TextView heading;
         TextView shortDescription;
+        ImageView Desciptionimage;
         public FeedViewHolder(View itemView) {
 
             super(itemView);
             heading = itemView.findViewById(R.id.heading);
             shortDescription = itemView.findViewById(R.id.shortDescription);
 
+            Desciptionimage = itemView.findViewById(R.id.description_image);
+
 
         }
         void bind(String Jheading, String Jdescription){
             heading.setText(Jheading);
+
             shortDescription.setText(Jdescription);
+            Desciptionimage.setImageResource(R.drawable.ic_action_action_search);
         }
     }
 }
