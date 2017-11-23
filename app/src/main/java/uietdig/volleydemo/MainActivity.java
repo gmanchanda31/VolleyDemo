@@ -25,10 +25,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,8 +62,29 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Toast.makeText(mContext,"testingServerSuccessResponse: "+ response, Toast.LENGTH_SHORT).show();
-                                Log.v("MainActivity", "testingServerErrorResponse: "+ response);
-                            }
+                                try{
+                                    Log.v("MainActivity", "testingServerErrorResponse: "+ response.getString("results"));
+                                    Log.v("MainActivity", "testingServerErrorResponse: "+ response);
+                                    JSONObject resultJSONObject = response.getJSONObject("results");
+                                    JSONArray currentAffairJOSNArray = resultJSONObject.getJSONArray("Tuesday Aug 01, 2017");
+                                    ArrayList<ModelFields> mModelList = new ArrayList();
+                                    ModelFields mModelObject;
+                                    for(int i = 0; i < currentAffairJOSNArray.length(); i++)
+                                    {
+                                        JSONObject object = currentAffairJOSNArray.getJSONObject(i);
+                                        JSONObject feildsObject = object.getJSONObject("fields");
+                                        mModelObject = new ModelFields(feildsObject);
+                                        mModelList.add(mModelObject);
+                                        Log.v("MainActivity", "testingServerErrorResponse: "+ mModelList.get(i).getDescription());
+                                    }
+
+
+
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+
+                                }
+                               }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -81,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 };
                 RequestQueue requestQueue = Volley.newRequestQueue(mContext);
                 requestQueue.add(jsonObjectRequest);
+
 
                 return false;
             }
