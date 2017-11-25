@@ -3,11 +3,13 @@ package uietdig.volleydemo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by akshay on 23/11/17.
  */
 
-public class ModelFields {
+public class ModelFields implements Serializable{
     private String description;
     private String url;
     private String image;

@@ -6,6 +6,11 @@
     android:background="@color/grey"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <ImageView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:id="@+id/errorImage"/>
 
 
     <FrameLayout
