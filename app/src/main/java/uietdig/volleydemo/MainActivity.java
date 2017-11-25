@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -45,12 +46,16 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     MaterialSearchView searchView;
     RecyclerView mRecyclerView;
+    ImageView mImageView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mImageView = findViewById(R.id.errorImage);
+        mRecyclerView = findViewById(R.id.feedRecyclerView);
+
 
         mContext = this;
     }
@@ -66,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Do some magic
+                mImageView.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, SERVER_URL+query, null,
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -87,12 +95,15 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                     FeedAdapter mFeedAdapter = new FeedAdapter(mModelList);
-                                    mRecyclerView = findViewById(R.id.feedRecyclerView);
                                     LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false);
                                     mRecyclerView.setLayoutManager(layoutManager);
                                     mRecyclerView.setAdapter(mFeedAdapter);
                                 }catch (JSONException e){
                                     e.printStackTrace();
+                                    Log.i("hello the best","world");
+                                    mRecyclerView.setVisibility(View.INVISIBLE);
+                                    mImageView.setVisibility(View.VISIBLE);
+                                    mImageView.setImageResource(R.drawable.nodata);
 
                                 }
                                }
@@ -100,6 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.v("MainActivity", "testingServerErrorResponse: "+ error);
+                        mRecyclerView.setVisibility(View.INVISIBLE);
+                        mImageView.setVisibility(View.VISIBLE);
+                        mImageView.setImageResource(R.drawable.networkerror);
+
                     }
                 }){
                     @Override
